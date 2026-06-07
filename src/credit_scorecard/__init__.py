@@ -1,4 +1,4 @@
-"""Credit scorecard modelling package."""
+"""信用评分卡建模代码包。"""
 
 __all__ = [
     "data",

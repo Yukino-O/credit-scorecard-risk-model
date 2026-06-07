@@ -1,35 +1,35 @@
-# Credit Scorecard Risk Model
+# 信用评分卡风控模型
 
-This is a portfolio-style credit risk project built around a classic scorecard workflow: synthetic loan applications, WOE binning, logistic regression, score scaling, model validation, and a simple credit policy view.
+这是一个适合放入简历和 GitHub 展示的信用风控项目。项目围绕经典评分卡流程展开：合成贷款申请数据、WOE 分箱、逻辑回归、分数刻度转换、模型验证，以及简单的授信策略分析。
 
-The project is designed at a realistic undergraduate level for a mathematics student who wants to show applied modelling judgement, not just call a black-box classifier. The emphasis is interpretability: every score can be traced back to binned borrower characteristics and a logistic regression model.
+项目水平按数学专业本科三年级的应用建模能力设计，重点不是调用黑箱分类器，而是展示对风控建模流程的理解。模型强调可解释性：每个信用分都可以追溯到申请人特征分箱和逻辑回归系数。
 
-## What The Project Does
+## 项目功能
 
-- Generates a reproducible retail credit application dataset with no personal data.
-- Trains a Weight of Evidence scorecard using only the training split.
-- Converts model outputs into credit scores where higher scores mean lower risk.
-- Reports AUC, Gini, KS, bad-rate stability, PSI, score-band bad rates, and approval cutoff trade-offs.
-- Saves a fitted model, scoring table, holdout scores, plots, and a short model report.
-- Includes pytest coverage for the binner and modelling pipeline.
-- Includes a GitHub Actions workflow for repeatable testing.
+- 生成可复现的零售贷款申请数据，不包含真实个人信息。
+- 只使用训练集拟合 WOE 评分卡，避免测试集信息泄露。
+- 将违约概率转换为信用分，分数越高表示风险越低。
+- 输出 AUC、Gini、KS、坏账率、PSI、分数段坏账率和审批阈值对比。
+- 保存评分卡表、验证集评分、图表和模型报告。
+- 使用 pytest 覆盖分箱模块和端到端建模流程。
+- 配置 GitHub Actions，便于在远程仓库中重复测试。
 
-## Repository Structure
+## 仓库结构
 
 ```text
-src/credit_scorecard/      Core package
-scripts/run_pipeline.py    End-to-end training and reporting pipeline
-tests/                     Unit and integration tests
-artifacts/                 Generated data, reports, plots, and model files
-docs/project_brief.md      Portfolio summary and resume bullets
-run_pipeline.ps1           Windows one-command runner
+src/credit_scorecard/      核心代码包
+scripts/run_pipeline.py    端到端训练与报告生成脚本
+tests/                     单元测试和集成测试
+artifacts/                 生成的数据、报告、图表和模型文件
+docs/project_brief.md      项目简介和简历表述
+run_pipeline.ps1           Windows 一键运行脚本
 ```
 
-The generated model file and synthetic row-level CSVs are ignored by Git because they can be recreated. The report tables and plots are kept in the repository so a reviewer can see the modelling results without running the code first.
+生成的模型文件和行级合成数据 CSV 没有提交到 Git，因为它们可以通过脚本重新生成。报告表格和图表保留在仓库中，方便查看者不运行代码也能快速了解建模结果。
 
-## Quick Start
+## 快速开始
 
-On Windows PowerShell:
+在 Windows PowerShell 中运行：
 
 ```powershell
 python -m venv .venv
@@ -38,13 +38,13 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-Or run:
+也可以直接运行：
 
 ```powershell
 .\run_pipeline.ps1
 ```
 
-Key outputs will be written to:
+主要输出文件：
 
 - `artifacts/reports/model_report.md`
 - `artifacts/reports/scorecard_table.csv`
@@ -54,45 +54,45 @@ Key outputs will be written to:
 - `artifacts/figures/bad_rate_by_score_band.png`
 - `artifacts/models/credit_scorecard.joblib`
 
-## Modelling Approach
+## 建模方法
 
-The model follows a standard retail risk scorecard pattern:
+模型采用零售信贷风控中常见的评分卡流程：
 
-1. Generate or load application data.
-2. Split into train and holdout sets with stratification.
-3. Bin numeric variables using training-set quantiles.
-4. Estimate WOE and Information Value for each bin.
-5. Fit a balanced logistic regression model on WOE-transformed features.
-6. Convert probability of default into a points-based credit score.
-7. Validate ranking performance and score stability.
+1. 生成或读取贷款申请数据。
+2. 按目标变量分层划分训练集和留出测试集。
+3. 使用训练集分位数对数值变量分箱。
+4. 计算每个分箱的 WOE 和 Information Value。
+5. 在 WOE 转换后的特征上拟合带类别权重的逻辑回归。
+6. 将违约概率转换为积分制信用分。
+7. 验证模型排序能力和分数稳定性。
 
-The score scale uses:
+信用分刻度设置：
 
-- Base score: 650
-- Base odds: 1 good account per 1 bad account
-- Points to double odds: 50
+- 基准分：650
+- 基准好坏账户比：1 个好账户对应 1 个坏账户
+- 好坏账户比翻倍所需分数：50
 
-## How To Read The Outputs
+## 如何阅读输出
 
-`model_report.md` is the best starting point. It summarises holdout performance and shows how different cutoffs change approval rate and observed default rate.
+`model_report.md` 是最适合先看的文件。它总结了留出测试集表现，并展示不同审批阈值对通过率和坏账率的影响。
 
-`scorecard_table.csv` is the interpretability layer. It lists every feature bin, WOE value, Information Value contribution, regression coefficient, and score points.
+`scorecard_table.csv` 是模型解释层。它列出每个特征分箱、WOE、Information Value 贡献、回归系数和对应分数。
 
-`approval_cutoffs.csv` turns the model into a decision view. A higher cutoff should approve fewer applicants with a lower expected default rate.
+`approval_cutoffs.csv` 将模型结果转化为策略视角。审批阈值越高，通常通过人数越少，但通过人群的预期违约率也越低。
 
-## Current Default Results
+## 当前默认结果
 
-Using the default 5,000-row synthetic dataset:
+使用默认 5,000 行合成数据时，留出测试集结果为：
 
-- Holdout AUC: 0.707
-- Holdout Gini: 0.414
-- Holdout KS: 0.314
-- Score PSI: 0.0143
+- 留出测试集 AUC：0.707
+- 留出测试集 Gini：0.414
+- 留出测试集 KS：0.314
+- 分数 PSI：0.0143
 
-## Limitations
+## 局限性
 
-This is not a production lending system. The dataset is synthetic, so the project is best read as a demonstration of modelling workflow, validation, and interpretability. A real lender would still need fairness testing, affordability checks, reject inference, monitoring, independent validation, and regulatory review.
+这不是生产级信贷系统。数据是合成的，因此本项目更适合作为建模流程、验证方法和可解释性展示。真实金融机构上线类似模型前，还需要公平性检验、还款能力评估、拒绝推断、模型监控、独立验证和监管审查。
 
-## Resume Description
+## 简历表述
 
-Built a reproducible credit risk scorecard in Python using WOE binning and logistic regression; generated score bands, AUC/KS/Gini validation, PSI stability checks, approval cutoff analysis, and interpretable scorecard outputs.
+使用 Python 构建可复现的信用风险评分卡项目，基于 WOE 分箱和逻辑回归生成可解释评分；完成 AUC/KS/Gini 验证、PSI 稳定性检查、分数段坏账率分析和审批阈值策略对比。

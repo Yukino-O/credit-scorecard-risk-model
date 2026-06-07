@@ -26,16 +26,47 @@ CATEGORICAL_FEATURES = [
 
 TARGET = "default_flag"
 
+FEATURE_NAME_ZH = {
+    "age": "年龄",
+    "annual_income": "年收入",
+    "employment_years": "工作年限",
+    "debt_to_income": "债务收入比",
+    "credit_utilization": "信用额度使用率",
+    "delinquencies_2y": "近两年逾期次数",
+    "inquiries_6m": "近六个月查询次数",
+    "loan_amount": "贷款金额",
+    "loan_to_income": "贷款收入比",
+    "home_ownership": "住房状态",
+    "loan_purpose": "贷款用途",
+    "education_level": "教育水平",
+}
+
+CATEGORY_VALUE_ZH = {
+    "MORTGAGE": "按揭房",
+    "RENT": "租房",
+    "OWN": "自有住房",
+    "OTHER": "其他",
+    "debt_consolidation": "债务整合",
+    "credit_card": "信用卡",
+    "home_improvement": "住房改善",
+    "medical": "医疗",
+    "small_business": "小微经营",
+    "education": "教育",
+    "high_school": "高中",
+    "bachelor": "本科",
+    "master_plus": "硕士及以上",
+    "MISSING": "缺失",
+}
+
 
 def generate_credit_applications(
     n_rows: int = 5000,
     random_state: int = 42,
 ) -> pd.DataFrame:
-    """Create a synthetic but realistic credit application dataset.
+    """生成一个可复现、结构接近真实业务的合成信贷申请数据集。
 
-    The generator is deliberately transparent: the target is produced from a
-    known risk equation plus noise, which makes the project reproducible without
-    exposing private borrower data.
+    目标变量由明确的风险方程加噪声生成，因此项目可以在不暴露真实借款人
+    隐私数据的前提下复现实验。
     """
     rng = np.random.default_rng(random_state)
 

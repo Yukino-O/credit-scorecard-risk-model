@@ -13,6 +13,10 @@ from sklearn.model_selection import train_test_split
 from credit_scorecard.data import CATEGORICAL_FEATURES, NUMERIC_FEATURES, TARGET, load_or_generate_dataset
 from credit_scorecard.metrics import approval_table, classification_metrics, score_psi
 from credit_scorecard.reporting import (
+    localize_approval_table,
+    localize_feature_importance,
+    localize_score_band_table,
+    localize_scorecard_table,
     plot_bad_rate_by_score_band,
     plot_roc,
     plot_score_distribution,
@@ -23,14 +27,14 @@ from credit_scorecard.scorecard import CreditScorecard
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run the credit scorecard modelling pipeline.")
-    parser.add_argument("--rows", type=int, default=5000, help="Number of synthetic applications to generate.")
-    parser.add_argument("--seed", type=int, default=42, help="Random seed for data generation and train/test split.")
-    parser.add_argument("--artifact-dir", type=Path, default=Path("artifacts"), help="Directory for outputs.")
+    parser = argparse.ArgumentParser(description="运行信用评分卡建模流程。")
+    parser.add_argument("--rows", type=int, default=5000, help="需要生成的合成申请样本数量。")
+    parser.add_argument("--seed", type=int, default=42, help="数据生成和训练/测试划分的随机种子。")
+    parser.add_argument("--artifact-dir", type=Path, default=Path("artifacts"), help="输出文件目录。")
     parser.add_argument(
         "--force-regenerate",
         action="store_true",
-        help="Regenerate the synthetic dataset even if the CSV already exists.",
+        help="即使 CSV 已存在，也重新生成合成数据。",
     )
     return parser.parse_args()
 
@@ -81,10 +85,26 @@ def main() -> None:
 
     (args.artifact_dir / "reports").mkdir(parents=True, exist_ok=True)
     (args.artifact_dir / "models").mkdir(parents=True, exist_ok=True)
-    scorecard_table.to_csv(args.artifact_dir / "reports" / "scorecard_table.csv", index=False)
-    feature_importance.to_csv(args.artifact_dir / "reports" / "feature_importance.csv", index=False)
-    policy.to_csv(args.artifact_dir / "reports" / "approval_cutoffs.csv", index=False)
-    band_table.to_csv(args.artifact_dir / "reports" / "score_band_bad_rates.csv", index=False)
+    localize_scorecard_table(scorecard_table).to_csv(
+        args.artifact_dir / "reports" / "scorecard_table.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    localize_feature_importance(feature_importance).to_csv(
+        args.artifact_dir / "reports" / "feature_importance.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    localize_approval_table(policy).to_csv(
+        args.artifact_dir / "reports" / "approval_cutoffs.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
+    localize_score_band_table(band_table).to_csv(
+        args.artifact_dir / "reports" / "score_band_bad_rates.csv",
+        index=False,
+        encoding="utf-8-sig",
+    )
     scored_test.to_csv(args.artifact_dir / "data" / "scored_holdout.csv", index=False)
     joblib.dump(scorecard, args.artifact_dir / "models" / "credit_scorecard.joblib")
 
@@ -106,10 +126,10 @@ def main() -> None:
         feature_importance,
     )
 
-    print("Credit scorecard pipeline completed.")
-    print(f"Test AUC: {test_metrics['auc']:.3f}")
-    print(f"Test KS: {test_metrics['ks']:.3f}")
-    print(f"Score PSI: {psi:.4f}")
+    print("信用评分卡建模流程已完成。")
+    print(f"测试集 AUC: {test_metrics['auc']:.3f}")
+    print(f"测试集 KS: {test_metrics['ks']:.3f}")
+    print(f"分数 PSI: {psi:.4f}")
 
 
 if __name__ == "__main__":

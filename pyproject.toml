@@ -1,7 +1,7 @@
 [project]
 name = "credit-scorecard-risk-model"
 version = "0.1.0"
-description = "A reproducible retail credit risk scorecard project using WOE binning and logistic regression."
+description = "使用 WOE 分箱和逻辑回归构建的可复现零售信贷风险评分卡项目。"
 requires-python = ">=3.11"
 dependencies = [
   "pandas>=2.2",

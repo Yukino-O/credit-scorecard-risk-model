@@ -16,7 +16,7 @@ class BinRule:
 
 
 class WoEBinner:
-    """Fit Weight of Evidence transformations without using test data."""
+    """只使用训练数据拟合 Weight of Evidence 转换，避免测试集信息泄露。"""
 
     def __init__(self, numeric_features: list[str], categorical_features: list[str], max_bins: int = 5):
         self.numeric_features = numeric_features

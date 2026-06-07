@@ -1,47 +1,47 @@
-# Credit Scorecard Model Report
+# 信用评分卡模型报告
 
-## Modelling Setup
+## 建模设置
 
-This project builds a retail credit risk scorecard with Weight of Evidence (WOE) binning and logistic regression. The data is synthetic and generated from a transparent risk equation, so the repository can be shared publicly without personal data.
+本项目使用 Weight of Evidence (WOE) 分箱和逻辑回归构建零售信贷风险评分卡。数据由透明的风险方程合成生成，不包含真实个人信息，因此可以公开放入 GitHub 仓库。
 
-## Holdout Performance
+## 留出测试集表现
 
-| Split | AUC | Gini | KS | Bad rate | Mean score |
+| 数据集 | AUC | Gini | KS | 坏账率 | 平均分 |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Train | 0.718 | 0.437 | 0.321 | 0.285 | 659.1 |
-| Test | 0.707 | 0.414 | 0.314 | 0.285 | 659.2 |
+| 训练集 | 0.718 | 0.437 | 0.321 | 0.285 | 659.1 |
+| 测试集 | 0.707 | 0.414 | 0.314 | 0.285 | 659.2 |
 
-Population Stability Index between train and test scores: **0.0143**.
+训练集与测试集信用分之间的 Population Stability Index (PSI)：**0.0143**。
 
-## Policy Cutoff View
+## 审批阈值视角
 
-|   score_cutoff |   approval_rate |   approved_default_rate |   decline_rate |
-|---------------:|----------------:|------------------------:|---------------:|
-|        520.000 |           0.984 |                   0.276 |          0.016 |
-|        560.000 |           0.941 |                   0.259 |          0.059 |
-|        600.000 |           0.841 |                   0.232 |          0.159 |
-|        640.000 |           0.656 |                   0.209 |          0.344 |
-|        680.000 |           0.385 |                   0.133 |          0.615 |
+|    审批阈值 |   通过率 |   通过人群坏账率 |   拒绝率 |
+|--------:|------:|----------:|------:|
+| 520.000 | 0.984 |     0.276 | 0.016 |
+| 560.000 | 0.941 |     0.259 | 0.059 |
+| 600.000 | 0.841 |     0.232 | 0.159 |
+| 640.000 | 0.656 |     0.209 | 0.344 |
+| 680.000 | 0.385 |     0.133 | 0.615 |
 
-## Strongest Predictors
+## 主要预测变量
 
-| feature            |   information_value |   abs_coefficient |
-|:-------------------|--------------------:|------------------:|
-| delinquencies_2y   |              0.1909 |            0.7217 |
-| credit_utilization |              0.1588 |            0.8984 |
-| debt_to_income     |              0.1468 |            0.8989 |
-| inquiries_6m       |              0.1229 |            0.6300 |
-| loan_to_income     |              0.0575 |            0.7370 |
-| home_ownership     |              0.0285 |            1.0578 |
-| loan_purpose       |              0.0275 |            0.8854 |
-| annual_income      |              0.0239 |            0.7574 |
+| 特征       |   Information Value |   系数绝对值 |
+|:---------|--------------------:|--------:|
+| 近两年逾期次数  |              0.1909 |  0.7217 |
+| 信用额度使用率  |              0.1588 |  0.8984 |
+| 债务收入比    |              0.1468 |  0.8989 |
+| 近六个月查询次数 |              0.1229 |  0.6300 |
+| 贷款收入比    |              0.0575 |  0.7370 |
+| 住房状态     |              0.0285 |  1.0578 |
+| 贷款用途     |              0.0275 |  0.8854 |
+| 年收入      |              0.0239 |  0.7574 |
 
-## Interpretation
+## 结果解释
 
-Higher scores mean lower estimated default risk. A lender could use the cutoff table to trade off growth and risk appetite. For example, a higher cutoff usually lowers observed default rate among approved applicants but rejects more applications.
+信用分越高，代表模型估计的违约风险越低。授信方可以使用审批阈值表在业务增长和风险偏好之间做权衡。通常审批阈值越高，通过人数越少，但通过人群的观察违约率也会下降。
 
-## Limitations
+## 局限性
 
-- The dataset is synthetic, so the project demonstrates modelling workflow rather than production lending performance.
-- Fair lending, affordability checks, reject inference, calibration over time, and regulatory sign-off would be required before any real deployment.
-- The scorecard is intentionally interpretable; a more advanced project could benchmark gradient boosting and calibrate it against this scorecard.
+- 数据集是合成的，因此本项目展示的是建模流程，而不是生产环境中的真实信贷表现。
+- 真实上线前仍需要公平性检验、还款能力评估、拒绝推断、长期校准、模型监控和监管审查。
+- 本项目有意选择可解释评分卡；进一步扩展时可以加入梯度提升树模型作为性能基准，并与评分卡结果对比校准。

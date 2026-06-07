@@ -1,39 +1,39 @@
-# Project Brief
+# 项目简介
 
-## One-line summary
+## 一句话总结
 
-A reproducible credit risk scorecard project that turns loan application features into an interpretable default-risk score using WOE binning and logistic regression.
+一个可复现的信用风险评分卡项目：使用 WOE 分箱和逻辑回归，将贷款申请特征转化为可解释的违约风险信用分。
 
-## Why this project is useful
+## 项目价值
 
-Credit scoring is a good risk analytics example because the model has to be explainable. A lender cannot only say that an applicant is risky; it also needs to understand which factors drove the decision, whether the model ranks risk well, and how a score cutoff changes approval rate.
+信用评分是风控分析中很典型的应用场景，因为模型不能只给出“风险高或低”的结论，还需要解释哪些因素影响了判断、模型是否能有效区分风险，以及不同审批阈值会如何改变通过率和坏账率。
 
-This project keeps that workflow visible. The pipeline creates synthetic application data, trains the scorecard only on the training split, evaluates it on a holdout set, and writes both technical outputs and decision tables.
+本项目把这条流程完整展示出来：建模流程会生成合成申请数据，只在训练集上拟合评分卡，在留出测试集上验证效果，并输出技术指标和策略决策表。
 
-## Methods used
+## 使用方法
 
-- Synthetic retail credit data generation
-- Train/test split with stratification
-- Weight of Evidence binning
-- Information Value feature diagnostics
-- Logistic regression
-- Credit score scaling
-- AUC, Gini, KS, PSI, and approval cutoff analysis
-- Pytest validation and GitHub Actions CI
+- 合成零售信贷申请数据
+- 按目标变量分层的训练集/测试集划分
+- Weight of Evidence 分箱
+- Information Value 特征诊断
+- 逻辑回归
+- 信用分刻度转换
+- AUC、Gini、KS、PSI 和审批阈值分析
+- pytest 测试和 GitHub Actions CI
 
-## Current results
+## 当前结果
 
-On the default 5,000-row synthetic dataset, the holdout model reaches:
+在默认 5,000 行合成数据上，留出测试集结果为：
 
 - AUC: 0.707
 - Gini: 0.414
 - KS: 0.314
 - PSI: 0.0143
 
-The result is intentionally moderate rather than over-optimised. It shows a realistic undergraduate-level modelling workflow with clear assumptions and reproducible outputs.
+结果没有刻意过度优化，而是保持在较真实的本科项目水平：假设清晰、流程完整、输出可复现。
 
-## Resume bullets
+## 简历要点
 
-- Built a Python credit risk scorecard using WOE binning and logistic regression, with interpretable score points for each borrower feature band.
-- Evaluated model ranking and stability using AUC, Gini, KS, PSI, score-band bad rates, and approval cutoff analysis.
-- Packaged the project with reproducible scripts, generated reports, plots, pytest coverage, and GitHub Actions CI.
+- 使用 Python 构建信用风险评分卡，基于 WOE 分箱和逻辑回归为每个申请人特征分箱生成可解释分数。
+- 使用 AUC、Gini、KS、PSI、分数段坏账率和审批阈值分析评估模型排序能力与稳定性。
+- 将项目打包为可复现脚本、报告、图表、pytest 测试和 GitHub Actions CI。
