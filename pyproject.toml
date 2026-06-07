@@ -1,0 +1,19 @@
+[project]
+name = "credit-scorecard-risk-model"
+version = "0.1.0"
+description = "A reproducible retail credit risk scorecard project using WOE binning and logistic regression."
+requires-python = ">=3.11"
+dependencies = [
+  "pandas>=2.2",
+  "numpy>=1.26",
+  "scikit-learn>=1.5",
+  "matplotlib>=3.8",
+  "seaborn>=0.13",
+  "pytest>=8.0",
+  "joblib>=1.4",
+  "tabulate>=0.9",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
